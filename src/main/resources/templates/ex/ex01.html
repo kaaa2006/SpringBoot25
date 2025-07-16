@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>리스트 사용해보기</title>
+</head>
+<body>
+
+<h4>[[${list}]]</h4> <!-- 인라인 표현법 -->
+<hr>
+<h4 th:text="${list}"></h4> <!-- 속성 표현법 -->
+<hr>
+
+<!-- 변수 연산 -->
+<div th:with="num1=10, num2=20">
+    <h4 th:text="${num1 + num2}"></h4>
+</div>
+<hr>
+
+<!-- 반복문 (기본) -->
+<ul>
+    <li th:each="str : ${list}" th:text="${str}"></li>
+</ul>
+
+<!-- th:block으로 반복 -->
+<ul>
+    <th:block th:each="str : ${list}">
+        <li>[[${str}]]</li>
+    </th:block>
+</ul>
+
+<!-- 상태값 확인 -->
+<ul>
+    <li th:each="str, status : ${list}">
+        status.count: [[${status.count}]] -- [[${str}]]
+    </li>
+</ul>
+<ul>
+    <li th:each="str, status : ${list}">
+        status.index: [[${status.index}]] -- [[${str}]]
+    </li>
+</ul>
+<hr>
+
+<!-- if문과 홀짝 판별 -->
+<ul>
+    <li th:each="str, status : ${list}">
+        <span th:if="${status.odd}">[[${status.index}]] 홀수(odd) --- [[${str}]]</span>
+        <span th:unless="${status.odd}">[[${status.index}]] 짝수(even) --- [[${str}]]</span>
+    </li>
+</ul>
+
+<!-- 삼항 연산자 -->
+<ul>
+    <li th:each="str, status : ${list}">
+        <span th:text="${status.odd} ? '홀수--' + str : '짝수--' + str"></span>
+    </li>
+</ul>
+
+<!-- switch-case문 -->
+<ul>
+    <li th:each="str, status : ${list}">
+        <th:block th:switch="${status.index % 3}">
+            <span th:case="0">[[${status.index}]]: 나머지 0</span>
+            <span th:case="1">[[${status.index}]]: 나머지 1</span>
+            <span th:case="2">[[${status.index}]]: 나머지 2</span>
+        </th:block>
+    </li>
+</ul>
+
+<!-- 타임리프 링크 처리 -->
+<a th:href="@{/hello}">컨트롤러에서 hello 경로를 찾는다.</a>
+<br>
+<a th:href="@{/hello(name='김기원', age=33)}">쿼리스트링 테스트</a>
+
+    <!--링크가 배열일 경우 이름의 파라미터 처리를 한다.-->
+<!--
+<a th:href="@{/hello(types=${ {'요리사','건축가','선생님'} },age=33)}">클릭후 URL확인</a>
+-->
+</body>
+</html>
