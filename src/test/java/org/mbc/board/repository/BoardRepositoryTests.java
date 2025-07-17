@@ -155,6 +155,140 @@ public class BoardRepositoryTests { //영속성 계층 테스트용
     // (board -> log.info(board))( -> ): 람다식 1개의 명령어가 있을 때 활용
 
     }
+@Test
+    public void testsearch1(){
+        Pageable pageable = PageRequest.of(1,10, Sort.by("bno").descending());
+       Page<Board> result = boardRepository.search1(pageable);
+    result.getContent().forEach(board -> log.info(board));
+    //Hibernate:
+    //    select
+    //        b1_0.bno,
+    //        b1_0.content,
+    //        b1_0.moddate,
+    //        b1_0.regdate,
+    //        b1_0.title,
+    //        b1_0.writer
+    //    from
+    //        board b1_0
+    //    where
+    //        b1_0.title like ? escape '!' -> like 1
+//Hibernate:
+//    select
+//        b1_0.bno,
+//        b1_0.content,
+//        b1_0.moddate,
+//        b1_0.regdate,
+//        b1_0.title,
+//        b1_0.writer
+//    from
+//        board b1_0
+//    where
+//        (
+//            b1_0.title like ? escape '!'
+//            or b1_0.content like ? escape '!' -> 조건이 2개 title,content
+//        )
+//        and b1_0.bno>?
+//    order by
+//        b1_0.bno desc
+//    limit
+//        ?, ? this.getQuerydsl().applyPagination(pageable,query);
+//Hibernate:
+//    select
+//        count(b1_0.bno)
+//    from
+//        board b1_0
+//    where
+//        (
+//            b1_0.title like ? escape '!'
+//            or b1_0.content like ? escape '!'
+//        )
+//        and b1_0.bno>?
+    }
+@Test
+    public void testSearchAll(){
+    // 프론트에서 t가 선택되면  title, c 가 선택되면 content , w: writet 조건으로 제시됨
+
+    String[] types = {"t","c","w"};
+    String keyword = "1"; // 검색 단어
+
+    Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
+
+    Page<Board> result = boardRepository.searchAll(types,keyword,pageable);
+    //Hibernate:
+    //    select
+    //        b1_0.bno,
+    //        b1_0.content,
+    //        b1_0.moddate,
+    //        b1_0.regdate,
+    //        b1_0.title,
+    //        b1_0.writer
+    //    from
+    //        board b1_0
+    //    where
+    //        (
+    //            b1_0.title like ? escape '!'
+    //            or b1_0.content like ? escape '!'
+    //            or b1_0.title like ? escape '!'
+    //        )
+    //        and b1_0.bno>?
+    //    order by
+    //        b1_0.bno desc
+    //    limit
+    //        ?, ?
+    //Hibernate:
+    //    select
+    //        count(b1_0.bno)
+    //    from
+    //        board b1_0
+    //    where
+    //        (
+    //            b1_0.title like ? escape '!'
+    //            or b1_0.content like ? escape '!'
+    //            or b1_0.title like ? escape '!'
+    //        )
+    //        and b1_0.bno>?
+   //Hibernate:
+    //    select
+    //        b1_0.bno,
+    //        b1_0.content,
+    //        b1_0.moddate,
+    //        b1_0.regdate,
+    //        b1_0.title,
+    //        b1_0.writer
+    //    from
+    //        board b1_0
+    //    where
+    //        (
+    //            b1_0.title like ? escape '!'
+    //            or b1_0.content like ? escape '!'
+    //            or b1_0.title like ? escape '!'
+    //        )
+    //        and b1_0.bno>?
+    //    order by
+    //        b1_0.bno desc
+    //    limit
+    //        ?, ?
+    //Hibernate:
+    //    select
+    //        count(b1_0.bno)
+    //    from
+    //        board b1_0
+    //    where
+    //        (
+    //            b1_0.title like ? escape '!'
+    //            or b1_0.content like ? escape '!'
+    //            or b1_0.title like ? escape '!'
+    //        ) booleanbuilder 가 괄호 쳐 줌
+    //        and b1_0.bno>?
+    log.info("전체 게시물 수 :" + result.getTotalElements()); //99
+    log.info("총 페이지 수 :" + result.getTotalPages()); //10
+    log.info("현재 페이지 번호 :" +result.getNumber());    //0
+    log.info("페이지당 페이지 개수 :" +result.getSize());    //10
+    log.info("다음 페이지 여부 :" +result.hasNext());  //true
+    log.info("시작 페이지 여부 :" +result.isFirst());  //true
+
+    result.getContent().forEach(board -> log.info(board));
+    }
 
 
 }// 클래스 종료
