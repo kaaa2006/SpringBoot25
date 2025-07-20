@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Board Register</title>
+</head>
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Board Register</div>
+                <div class="card-body">
+                    <form action="/board/register" method="post">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">제목</span>
+                            <input type="text" name="title" class="form-control" placeholder="Title">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">내용</span>
+                            <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">작성자</span>
+                            <input type="text" name="writer" class="form-control" placeholder="Writer">
+                        </div>
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-primary">저장</button>
+                                <button type="reset" class="btn btn-secondary">Result</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- 앤드바디 끝 -->
+            </div> <!--<div class="card">-->
+        </div> <!--<div class="col">-->
+    </div> <!--<div class="row mt-3">-->
+</div><!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+    const errors = [[${errors}]]
+    console.log(errors)
+
+    let errorsMsg = ''
+    if (erorrs) {
+        for (let i = 0; i < erorrs.length; i++) {
+            errorsMsg += `${erorrs[i].field}은(는) ${erorrs[i].code} \n`
+        }
+        alert(errorsMsg)
+    }
+</script>
+
+
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>수정 페이지</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    게시물 수정
+                </div> <!--card-header-->
+                <div class="card-body">
+                    <form th:action="@{/board/modify}" method="post" id="f1">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">번호</span>
+                            <input type="text" class="form-control" th:value="${dto.bno}" name="bno" readonly>
+                        </div> <!--번호-->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">제목</span>
+                            <input type="text" class="form-control" name="title" th:value="${dto.title}" readonly>
+                        </div> <!--제목-->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">내용</span>
+                            <textarea class="form-control col-sm-5" rows="5" name="content">[[${dto.content}]]
+                                </textarea>
+                        </div> <!--내용-->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">작성자</span>
+                            <input type="text" class="form-control" th:value="${dto.writer}" name="writer" readonly>
+                        </div> <!--작성자-->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">업로드 날짜</span>
+                            <input type="text" class="form-control"
+                                   th:value="${#temporals.format(dto.regDate,'yyyy-MM-dd hh:mm:ss')}" readonly>
+                        </div><!--업로드 날짜-->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">수정 날짜</span>
+                            <input type="text" class="form-control"
+                                   th:value="${#temporals.format(dto.modDate,'yyyy-MM-dd hh:mm:ss')}" readonly>
+                        </div> <!--업로드 날짜-->
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="button" class="btn btn-primary listBtn">목록보기</button>
+                                <button type="button" class="btn btn-secondary modBtn">수정</button>
+                                <button type="button" class="btn btn-danger removeBtn">지우기</button>
+                            </div>
+                        </div>
+                    </form>
+                </div> <!--card-body-->
+            </div> <!--card-->
+        </div><!--<div class="col">-->
+    </div><!-- <div class="row mt-3">-->
+</div><!--fragment-->
+<script layout:fragment="script" th:inline="javascript">
+
+    const errors = [[#{errors}]]
+    console.log(errors)
+
+    let errorMsg = ''
+
+    if (errors) {
+        for (let i = 0; i < errors.length; i++) {
+            errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
+        }
+        history.replaceState({}, null, null)
+        alert(errorMsg)
+    } // 에러 처리 부분
+    const link = [[${pageRequestDTO.getLink()}]]
+    const formObg = document.querySelector("#f1")
+
+    document.querySelector(".modBtn").addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        formObg.action = `/board/modify?${link}`
+        formObg.method = `post`
+        formObg.submit()
+    }, false)
+    document.querySelector(".removeBtn").addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        formObg.action = `/board/remove?`
+        formObg.method = `post`
+        formObg.submit()
+    }, false)
+    document.querySelector(".listBtn").addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        formObg.reset()
+        self.location = `/board/list?${link}`
+
+    }, false)
+</script>
+</body>
+</html>

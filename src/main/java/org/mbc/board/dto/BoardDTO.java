@@ -1,5 +1,7 @@
 package org.mbc.board.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,15 +15,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor // 기본 생성자
 public class BoardDTO {
 
+    //https://sanghye.tistory.com/36
     private Long bno;
+    @NotEmpty
+    @Size(min = 3, max = 100)
+    private String title;
+    @NotEmpty
+    private String content;
+    @NotEmpty
+    private String writer;
 
-    private String title ;
+    private LocalDateTime regDate;
 
-    private String content ;
-
-    private String writer ;
-
-    private LocalDateTime regDate ;
-
-    private LocalDateTime modDate ;
+    private LocalDateTime modDate;
 }
