@@ -5,7 +5,6 @@ import groovy.util.logging.Log4j2;
 import lombok.RequiredArgsConstructor;
 import org.mbc.board.domain.Board;
 import org.mbc.board.dto.BoardDTO;
-import org.mbc.board.dto.BoardListReplyCountDTO;
 import org.mbc.board.dto.PageRequestDTO;
 import org.mbc.board.dto.PageResponseDTO;
 import org.mbc.board.repository.BoardRepository;
@@ -96,31 +95,6 @@ public class BoardServiceImpl implements BoardService {
                 .dtoList(dtoList)
                 .total((int)result.getTotalElements())
                 .build(); // 빌더패턴을 이용해서 리턴할 때 사용함.
-    }
-
-    @Override
-    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO) {
-
-
-        String[] types = pageRequestDTO.getTypes(); //프론트에 넘어온 type t,c,w 처리
-        String keyword = pageRequestDTO.getKeyword(); // 프론트에서 넘어온 검색단어 처리
-        Pageable pageable = pageRequestDTO.getPageable("bno");  //프론트에서 넘어온 bno를 이용한 정렬 처리용
-        //  return PageRequest.of(this.page-1, this.size, Sort.by(props).descending());
-
-
-        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types, keyword, pageable);
-        // 테스트에서 해봤던 코드
-
-
-        return PageResponseDTO.<BoardListReplyCountDTO>withAll()
-                .pageRequestDTO(pageRequestDTO)
-                .dtoList(result.getContent())
-                .total((int)result.getTotalElements())
-                .build(); // 빌더패턴을 이용해서 리턴할 때 사용함.
-
-
-
-
     }
 
 }
