@@ -28,10 +28,13 @@ public class BoardController {
     public void list(PageRequestDTO pageRequestDTO, Model model){
         // 페이징 처리와 정렬과 검색이 추가된 리스트가 나옴.
 
-        //PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        // p548쪽 제외PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
         // 페이징 처리가 되는 요청을 처리하고 결과를 response로 받는다.
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
-        // 댓글의 갯수용 dto로 프론트 전달
+
+        PageResponseDTO<BoardListReplyCountDTO> responseDTO =
+                boardService.listWithReplyCount(pageRequestDTO);
+        // 댓글의 갯수용 dto로 프론트 전달!!
+
         log.info(responseDTO);
 
         model.addAttribute("responseDTO",responseDTO); // 결과를 스프링이 관리하는 모델 객체로 전달
@@ -131,15 +134,5 @@ public class BoardController {
         return "redirect:/board/list";
 
     }
-   // @GetMapping("/list")
-//    public void list(PageRequestDTO pageRequestDTO,Model model){
-//        //PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
-//
-//        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
-//
-//        log.info(responseDTO);
-//
-//        model.addAttribute("responseDTO",responseDTO);
-//    }
 
 }

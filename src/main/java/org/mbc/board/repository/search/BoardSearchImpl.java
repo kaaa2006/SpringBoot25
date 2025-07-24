@@ -204,26 +204,26 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         //        b1_0.bno,
         //        b1_0.title,
         //        b1_0.writer,
-        //        b1_0.regdate,
-        //        count(r1_0.rno)
+        //        b1_0.regdate,         board 필드를 출력
+        //        count(r1_0.rno)       댓글테이블의 rno 개수
         //    from
-        //        board b1_0
-        //    left join
+        //        board b1_0            board 테이블에
+        //    left join                 left 조인
         //        reply r1_0
-        //            on r1_0.board_bno=b1_0.bno
+        //            on r1_0.board_bno=b1_0.bno  on메서드로 조건이 bno와 같은
         //    where
         //        (
         //            b1_0.title like ? escape '!'
         //            or b1_0.content like ? escape '!'
         //            or b1_0.writer like ? escape '!'
         //        )
-        //        and b1_0.bno>?
+        //        and b1_0.bno>?                    pk로 빠른 검색(인덱싱)
         //    group by
-        //        b1_0.bno
+        //        b1_0.bno                          그룹핑 count 처리
         //    order by
-        //        b1_0.bno desc
+        //        b1_0.bno desc                     내림차순
         //    limit
-        //        ?, ?
+        //        ?, ?                               페이징 처리
         //Hibernate:
         //    select
         //        count(distinct b1_0.bno)

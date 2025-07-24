@@ -20,5 +20,7 @@ public interface BoardService {
 
     PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
     // 페이징 처리에 대한 요청을 리스트로 처리하고 결과를 응답으로 보내는 메서드!!!
-    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);  // 댓글의 숫자끼리 처리
+
+    // p547 페이징 + 정렬 + 댓글 수 추가
+    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 }
