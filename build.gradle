@@ -36,6 +36,14 @@ dependencies {
     // 스프링 시큐리티6+타임리프 https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 
+    // 카카오톡 로그인 oauth2 추가//
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client
+
+    implementation 'org.springframework.security:spring-security-oauth2-client'
+
+
+
+
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' /* 프론트 관련 */
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0' /* 프론트 레이아웃 관련*/
     // https://mvnrepository.com/artifact/net.coobird/thumbnailator

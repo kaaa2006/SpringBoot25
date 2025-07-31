@@ -30,7 +30,7 @@
             <div class="input-group mb-3">
               <span class="input-group-text">Writer</span>
               <input type="text" name="writer" class="form-control" placeholder="Writer"
-              th:value="${#authentication.principal.username}" readonly >
+              th:value="${#authentication.principal.username}" readonly>
 
             </div>
 
@@ -98,11 +98,9 @@
   // AddFlashAttribute()를 통해서 errors라는 이름으로 에러메시지들이 전송됨.
   // list.html 에서 result 변수를 통해 모달창을 처리함.
 
-  //p708 로그인시 작성자 이름 자동으로 들어감 id
+  // p708 쪽 로그인시 자동으로 작성자가 들어간다.
   const auth = [[${#authentication.principal}]] // 로그인한 객체
   //console.log(auth)
-
-
 
   const errors = [[${errors}]]
   console.log(errors)
@@ -214,7 +212,6 @@
     formObj.reset(); // db에 안되서 변경함
 
   }, false)
-
 
 
 </script>

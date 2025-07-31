@@ -33,7 +33,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model) {
+    public void list(PageRequestDTO pageRequestDTO, Model model){
         // 페이징 처리와 정렬과 검색이 추가된 리스트가 나옴.
 
         // p548쪽 제외PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
@@ -45,32 +45,31 @@ public class BoardController {
 
         log.info(responseDTO);
 
-        model.addAttribute("responseDTO", responseDTO); // 결과를 스프링이 관리하는 모델 객체로 전달
+        model.addAttribute("responseDTO",responseDTO); // 결과를 스프링이 관리하는 모델 객체로 전달
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')") //  User.roles("USER")  // User.authorities("ROLE_USER")
     @GetMapping("/register")
-    // register에 들어오면 board.register.html로 간다.
-    public void registerGET() {
-
+    public void registerGET(){
+        // http://localhost/board/register로 들어오면 board.register.html로 간다.
     }
 
     @PostMapping("/register")
-    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         // BindingResult : @Valid,  @ModelAttribute에 데이터 바인딩 오류가 발생할때 오류정보를 담는다.
         // bindingResult가 없으면 400 오류가 발생하게 되고 Controller가 호출되지 않고 Error Page로 이동함.
 
         log.info("board POST register.......");
 
-        if (bindingResult.hasErrors()) { // 오류발생시 addFlashAttribute로 1회용 에러 메시지를 담고 전달한다.
+        if(bindingResult.hasErrors()) { // 오류발생시 addFlashAttribute로 1회용 에러 메시지를 담고 전달한다.
             log.info("has errors.......");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
             return "redirect:/board/register";
         }
 
         log.info(boardDTO);
 
-        Long bno = boardService.register(boardDTO);
+        Long bno  = boardService.register(boardDTO);
 
         redirectAttributes.addFlashAttribute("result", bno);
         // 정상 처리시 addFlashAttribute에 결과 정보를 bno를 담아 전달한다.
@@ -89,9 +88,10 @@ public class BoardController {
 //
 //    }
 
-    @PreAuthorize("isAuthenticated()") // 로그인한 상태이면 (권한에 상관없음)
+
+    @PreAuthorize("isAuthenticated()") // 로그인한 상태이면!!! (권한에 상관없음)
     @GetMapping({"/read", "/modify"})
-    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
+    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
 
         BoardDTO boardDTO = boardService.readOne(bno);
 
@@ -100,25 +100,26 @@ public class BoardController {
         model.addAttribute("dto", boardDTO);
 
     }
-    @PreAuthorize("principal.username == #boardDTO.writer") // p714추가 로그인한 사용자와 작성자가 같은지
+
+    @PreAuthorize("principal.username == #boardDTO.writer")  // p714 로그인한 사용자와 작성자가 같은지
     @PostMapping("/modify")
-    public String modify(PageRequestDTO pageRequestDTO,
-                         @Valid BoardDTO boardDTO,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes) {
+    public String modify( PageRequestDTO pageRequestDTO,
+                          @Valid BoardDTO boardDTO,
+                          BindingResult bindingResult,
+                          RedirectAttributes redirectAttributes){
 
         log.info("board modify post......." + boardDTO);
 
-        if (bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors()) {
             log.info("has errors.......");
 
             String link = pageRequestDTO.getLink();
 
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
 
             redirectAttributes.addAttribute("bno", boardDTO.getBno());
 
-            return "redirect:/board/modify?" + link;
+            return "redirect:/board/modify?"+link;
         }
 
         boardService.modify(boardDTO);
@@ -130,7 +131,7 @@ public class BoardController {
         return "redirect:/board/read";
     }
 
-    @PreAuthorize("principal.username == #boardDTO.writer")
+    @PreAuthorize("principal.username == #boardDTO.writer") // p719 작성자가 삭제 가능!!!!
     @PostMapping("/remove")
     public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
 
@@ -139,7 +140,7 @@ public class BoardController {
         boardService.remove(bno);
 
         List<String> fileNames = boardDTO.getFileNames();
-        if (fileNames != null && fileNames.size() > 0) {
+        if(fileNames != null && fileNames.size() > 0) {
             removeFiles(fileNames);
         }
         redirectAttributes.addFlashAttribute("result", "removed");
@@ -150,7 +151,7 @@ public class BoardController {
 
     private void removeFiles(List<String> files) {
 
-        for (String fileName : files) {
+        for (String fileName:files) {
             // import org.springframework.core.io.Resource
             Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
             String resourceName = resource.getFilename();
